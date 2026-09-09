@@ -32,7 +32,48 @@ def test_schematic_names_all_mandatory_functional_blocks():
         "BEMF_B_U", "BEMF_B_V", "BEMF_B_W", "TIM1_BKIN_A", "TIM1_BKIN_B",
     ):
         assert token in schematic
-    assert schematic.count("SFS06R025GF") == 36
+    assert schematic.count('(symbol (lib_id "EDF_ESC:SFS06R025GF")') == 36
+
+
+def test_schematic_has_exact_connected_symbol_instance_inventory():
+    schematic = build_schematic()
+    assert schematic.count('(symbol (lib_id "EDF_ESC:SFS06R025GF")') == 36
+    assert schematic.count('(symbol (lib_id "EDF_ESC:DRV8300DRGER")') == 2
+    assert schematic.count('(symbol (lib_id "EDF_ESC:PY32F030K28U6TR")') == 2
+    assert schematic.count('(symbol (lib_id "EDF_ESC:INA190A3IDDFR")') == 2
+    assert schematic.count('(symbol (lib_id "EDF_ESC:XL1509-ADJ")') == 1
+    assert schematic.count('(symbol (lib_id "EDF_ESC:XL4016E1")') == 1
+    assert schematic.count('(symbol (lib_id "EDF_ESC:XC6206P332MR")') == 1
+    assert '(symbol (lib_id "EDF_ESC:SFS06R025GF")' in schematic
+    assert '(wire ' in schematic
+    assert '(label "PWM_A_UH"' in schematic
+    assert '(label "GATE_SUPPLY_FAULT_A"' in schematic
+    assert 'FET MANIFEST:' not in schematic
+
+
+def test_schematic_uses_binding_pin_names_and_no_invented_driver_fault_pin():
+    schematic = build_schematic()
+    for token in (
+        '(pin passive line',
+        '(name "INLA"', '(number "1"', '(name "EP"', '(number "25"',
+        '(name "VCC"', '(name "PF0"', '(name "PB8"', '(number "33"',
+        '(name "VS"', '(name "ENABLE"', '(name "IN+"', '(name "IN-"',
+        '(name "SOURCE"', '(name "GATE"', '(name "DRAIN"',
+    ):
+        assert token in schematic
+    assert 'nFAULT' not in schematic
+
+
+def test_schematic_labels_are_at_serialized_pin_endpoints():
+    schematic = build_schematic()
+    # Pin endpoints are emitted with three decimals, matching symbol-library serialization.
+    for net in ("CURRENT_A", "KELVIN_A+", "KELVIN_A-", "PWM_A_UH", "G_A_UH_1",
+                "BAT_A-", "MOTOR_A_V", "12V_SW", "BEC_FB", "5V_BEC"):
+        assert f'(label "{net}" ' in schematic
+    assert schematic.count('(wire (pts (xy ') >= 508
+    wire_points = set(re.findall(r'\(wire \(pts \(xy ([0-9.]+) ([0-9.]+)\) \(xy ([0-9.]+) ([0-9.]+)\)', schematic))
+    assert wire_points
+    assert all(a == c and b == d for a, b, c, d in wire_points)
 
 
 def test_control_devices_have_full_package_pad_counts():

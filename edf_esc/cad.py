@@ -237,40 +237,76 @@ def build_board() -> str:
 
 
 def build_schematic() -> str:
-    blocks = [
-        "POWER INPUT A: BAT_A+ -> KELVIN_A+ / KELVIN_A- -> INA190A3IDDFR",
-        "ESC A: DRV8300DRGER + 18x PARALLEL MOSFET + PY32F030K28U6TR",
-        "BEMF_A_U BEMF_A_V BEMF_A_W TIM1_BKIN_A",
-        "POWER INPUT B: BAT_B+ -> KELVIN_B+ / KELVIN_B- -> INA190A3IDDFR",
-        "ESC B: DRV8300DRGER + 18x PARALLEL MOSFET + PY32F030K28U6TR",
-        "BEMF_B_U BEMF_B_V BEMF_B_W TIM1_BKIN_B",
-        "AUXILIARY: XL1509-ADJ 12V GATE; XL4016E1 5V/8A TARGET; XC6206P332MR 3V3",
-        "UNVALIDATED REVIEW SCHEMATIC — see docs/requirements-traceability.md",
-    ]
-    fet_manifest = " ".join(["SFS06R025GF" for _ in range(36)])
-    blocks.append(f"FET MANIFEST: {fet_manifest}")
-    lines = [
-        f'(kicad_sch (version {SCHEMATIC_VERSION}) (generator eeschema)',
-        '  (uuid 3e5b24b0-462c-4f73-9fb1-36e521559001)',
-        '  (paper "A4")',
-        '  (lib_symbols)',
-    ]
-    y = 25
-    for index, block in enumerate(blocks, 1):
-        escaped = block.replace('"', "'")
-        lines.extend([
-            f'  (text "{escaped}" (at 20 {y} 0)',
-            '    (effects (font (size 1.27 1.27)) (justify left bottom))',
-            f'    (uuid 3e5b24b0-462c-4f73-9fb1-{index:012d})',
-            '  )',
-        ])
-        y += 12
-    lines.extend([
-        '  (sheet_instances',
-        '    (path "/" (page "1"))',
-        '  )',
-        ')',
-    ])
+    # Keep the complete symbol library in the schematic so it opens without
+    # relying on a user's global library table.  Every connection is a real
+    # label attached to a real symbol pin (the review sheet is not a netlist
+    # disguised as prose).
+    library = build_symbol_library().splitlines()[1:-1]
+    lines = [f'(kicad_sch (version {SCHEMATIC_VERSION}) (generator eeschema)',
+             '  (uuid 3e5b24b0-462c-4f73-9fb1-36e521559001)', '  (paper "A4")',
+             '  (lib_symbols']
+    lines.extend('  ' + line for line in library)
+    lines.append('  )')
+    instances: list[tuple[str, str, float, float]] = []
+    for ch, x in (("A", 55.0), ("B", 175.0)):
+        instances += [(f"UG{ch}", "DRV8300DRGER", x, 55),
+                      (f"UC{ch}", "PY32F030K28U6TR", x, 125),
+                      (f"UCS{ch}", "INA190A3IDDFR", x, 195)]
+        for i in range(18):
+            instances.append((f"Q{ch}{i+1}", "SFS06R025GF", x + (i % 6) * 12, 255 + (i // 6) * 22))
+            instances.append((f"RG{ch}{i+1}", "R_0603", x + (i % 6) * 12, 245 + (i // 6) * 22))
+    instances += [("U12V", "XL1509-ADJ", 150, 255), ("UBEC", "XL4016E1", 175, 255),
+                  ("U3V3", "XC6206P332MR", 200, 255)]
+    for n, (ref, value, x, y) in enumerate(instances, 1):
+        uid = f"3e5b24b0-462c-4f73-9fb1-{n:012d}"
+        display_value = "4R7" if value == "R_0603" else value
+        lines += [f'  (symbol (lib_id "EDF_ESC:{value}") (at {x:g} {y:g} 0) (unit 1)',
+                   '    (in_bom yes) (on_board yes)', f'    (uuid {uid})',
+                   f'    (property "Reference" "{ref}" (at {x:g} {y-6:g} 0) (effects (font (size 1.27 1.27))))',
+                   f'    (property "Value" "{display_value}" (at {x:g} {y+6:g} 0) (effects (font (size 1.27 1.27))))',
+                   f'    (pin_names hide)', '    (exclude_from_sim no)',
+                   f'    (instances (project "edf-esc" (path "/" (reference "{ref}") (unit 1))))', '  )']
+    channel = {
+        "A": ["+3V3", "SPI_SCK", "SPI_MISO", "NRST_A", "GND", "CURRENT_A", "VBUS_ADC_A", "BEMF_A_U", "BEMF_A_V", "BEMF_A_W", "NTC_A", "TIM1_BKIN_A", "PWM_A_UL", "PWM_A_VL", "PWM_A_WL", "GND", "GND", "PWM_A_UH", "PWM_A_VH", "PWM_A_WH", "GND", "GND", "SWDIO_A", "SWCLK_A", "GND", "GND", "THROTTLE_A", "GATE_SUPPLY_FAULT_A", "GND", "SPI_MOSI", "GND", "CS_A", "GND"],
+        "B": ["+3V3", "SPI_SCK", "SPI_MISO", "NRST_B", "GND", "CURRENT_B", "VBUS_ADC_B", "BEMF_B_U", "BEMF_B_V", "BEMF_B_W", "NTC_B", "TIM1_BKIN_B", "PWM_B_UL", "PWM_B_VL", "PWM_B_WL", "GND", "GND", "PWM_B_UH", "PWM_B_VH", "PWM_B_WH", "GND", "GND", "SWDIO_B", "SWCLK_B", "GND", "GND", "THROTTLE_B", "GATE_SUPPLY_FAULT_B", "GND", "SPI_MOSI", "GND", "CS_B", "GND"],
+    }
+    # Labels are placed at the exact pin endpoints produced by build_symbol_library.
+    label_id = 1
+    for ref, value, x, y in instances:
+        if ref.startswith("UCS"):
+            ch = ref[-1]; nets_for_pins = ["+3V3", "+3V3", "GND", "GND", f"CURRENT_{ch}", "NC", f"KELVIN_{ch}+", f"KELVIN_{ch}-"]
+        elif ref.startswith("UC"):
+            nets_for_pins = channel[ref[-1]]
+        elif ref.startswith("UG"):
+            ch = ref[-1]; nets_for_pins = [f"PWM_{ch}_UL", f"PWM_{ch}_VL", f"PWM_{ch}_WL", "12V_GATE", "GND", "GND", "NC", "NC", f"G_{ch}_WL", f"G_{ch}_VL", f"G_{ch}_UL", f"MOTOR_{ch}_W", f"G_{ch}_WH", f"BST_{ch}_W", f"MOTOR_{ch}_V", f"G_{ch}_VH", f"BST_{ch}_V", f"MOTOR_{ch}_U", f"G_{ch}_UH", f"BST_{ch}_U", "NC", f"PWM_{ch}_UH", f"PWM_{ch}_VH", f"PWM_{ch}_WH", "GND"]
+        elif ref.startswith("Q"):
+            ch = ref[1]; group = (int(ref[2:]) - 1) // 3; phase = "UVW"[group // 2]; side = "HL"[group % 2]
+            source = f"MOTOR_{ch}_{phase}" if side == "H" else f"BAT_{ch}-"; drain = f"BAT_{ch}+" if side == "H" else f"MOTOR_{ch}_{phase}"
+            nets_for_pins = [source, source, source, f"G_{ch}_{phase}{side}_{(int(ref[2:])-1)%3+1}", drain, drain, drain, drain]
+        elif ref.startswith("RG"):
+            ch = ref[2]; idx = int(ref[3:]); group = (idx - 1) // 3; phase = "UVW"[group // 2]; side = "HL"[group % 2]; n = (idx - 1) % 3 + 1
+            nets_for_pins = [f"G_{ch}_{phase}{side}", f"G_{ch}_{phase}{side}_{n}"]
+        elif ref == "U12V":
+            nets_for_pins = ["12V_SW", "12V_SW", "12V_FB", "GND", "NC", "BAT_A+", "BAT_A+", "NC"]
+        elif ref == "UBEC":
+            nets_for_pins = ["GND", "BEC_FB", "BEC_SW", "BAT_A+", "NC"]
+        elif ref == "U3V3":
+            nets_for_pins = ["GND", "+3V3", "5V_BEC"]
+        else:
+            continue
+        count = len(nets_for_pins); height = max(5.08, count * 0.635); left_count = (count + 1) // 2
+        for pin, net in enumerate(nets_for_pins, 1):
+            row = pin - 1 if pin <= left_count else pin - left_count - 1
+            px = x - 7.62 if pin <= left_count else x + 7.62
+            py = y + height / 2 - 0.635 - row * 1.27
+            px, py = round(px, 3), round(py, 3)
+            lines += [f'  (label "{net}" (at {px:g} {py:g} 0) (fields_autoplaced)', '    (effects (font (size 1.27 1.27)))', f'    (uuid 5e5b24b0-462c-4f73-9fb1-{label_id:012d}))']
+            lines += [f'  (wire (pts (xy {px:g} {py:g}) (xy {px:g} {py:g})) (stroke (width 0) (type default)) (uuid 7e5b24b0-462c-4f73-9fb1-{label_id:012d}))']
+            label_id += 1
+    lines += ['  (text "UNVALIDATED — REVIEW ONLY; DO NOT FABRICATE" (at 100 15 0)',
+              '    (effects (font (size 2 2) (thickness 0.35)))',
+              '    (uuid 6e5b24b0-462c-4f73-9fb1-000000000001))',
+              '  (sheet_instances (path "/" (page "1")))', ')']
     return "\n".join(lines) + "\n"
 
 
@@ -294,12 +330,18 @@ def build_footprints() -> dict[str, str]:
 
 def build_symbol_library() -> str:
     devices = (
-        ("SFS06R025GF", "Q", 8), ("DRV8300DRGER", "U", 24),
-        ("PY32F030K28U6TR", "U", 32), ("INA190A3IDDFR", "U", 8),
+        ("SFS06R025GF", "Q", 8), ("DRV8300DRGER", "U", 25),
+        ("PY32F030K28U6TR", "U", 33), ("INA190A3IDDFR", "U", 8),
         ("XL1509-ADJ", "U", 8), ("XL4016E1", "U", 5),
-        ("XC6206P332MR", "U", 3),
+        ("XC6206P332MR", "U", 3), ("R_0603", "R", 2),
     )
     lines = ['(kicad_symbol_lib (version 20220914) (generator kicad_symbol_editor)']
+    pin_names = {
+        "SFS06R025GF": ["SOURCE"] * 3 + ["GATE"] + ["DRAIN"] * 4,
+        "DRV8300DRGER": ["INLA", "INLB", "INLC", "GVDD", "MODE", "GND", "NC", "NC", "GLC", "GLB", "GLA", "SHC", "GHC", "BSTC", "SHB", "GHB", "BSTB", "SHA", "GHA", "BSTA", "DT", "INHA", "INHB", "INHC", "EP"],
+        "PY32F030K28U6TR": ["VCC", "PF0", "PF1", "PF2/NRST", "PF3", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "VSS", "PB2", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13/SWDIO", "PA14/SWCLK", "PA15", "PB3", "PB4", "PB5", "PB6", "PB7", "PF4/BOOT0", "PB8", "GND"],
+        "INA190A3IDDFR": ["VS", "ENABLE", "REF", "GND", "OUT", "NC", "IN+", "IN-"],
+    }
     for name, prefix, count in devices:
         height = max(5.08, count * 0.635)
         lines.extend([
@@ -320,7 +362,7 @@ def build_symbol_library() -> str:
             py = height / 2 - 0.635 - row * 1.27
             lines.extend([
                 f'      (pin passive line (at {px:.2f} {py:.3f} {angle}) (length 2.54)',
-                f'        (name "P{pin}" (effects (font (size 0.8 0.8))))',
+                f'        (name "{pin_names.get(name, [f"P{i}" for i in range(1, count + 1)])[pin-1]}" (effects (font (size 0.8 0.8))))',
                 f'        (number "{pin}" (effects (font (size 0.8 0.8))))',
                 '      )',
             ])
