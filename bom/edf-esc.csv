@@ -1,0 +1,40 @@
+reference,quantity,manufacturer,mpn,distributor,distributor_part_number,unit_price_usd,extended_price_usd,price_captured,alternate_part,reason_selected,status
+QA1-QA18 QB1-QB18,36,Oriental Semiconductor,SFS06R025GF,LCSC,C49005839,0.5670,20.4120,2026-09-09,,Required 60 V 2.5 mOhm max at 10 V and 81 nC MOSFET; 259 stocked; 30+ price,datasheet_and_stock_verified
+UGA UGB,2,Texas Instruments,DRV8300DRGER,LCSC,C3655801,0.6152,1.2304,2026-09-09,,100 V three-phase driver with integrated bootstrap diodes; 11428 stocked; 1+ price,verified_datasheet_and_stock
+UCA UCB,2,PUYA,PY32F030K28U6TR,LCSC,C3018718,0.4106,0.8212,2026-09-09,,Lowest-cost specified MCU with verified simultaneous pin map; 18245 stocked; 5+ price,verified_datasheet_and_stock
+UCSA UCSB,2,Texas Instruments,INA190A3IDDFR,LCSC,C1852076,1.8126,3.6252,2026-09-09,INA186A3IDDFR,Gain-100 high-side current amplifier with 40 V common-mode range; 8100 stocked; 1+ price,verified_datasheet_and_stock
+UBEC,1,XLSEMI,XL4016E1,LCSC,C55881,1.0777,1.0777,2026-09-09,,Specified low-cost 5 V high-current buck starting point; 26710 stocked; 1+ price,stock_verified_thermal_validation_required
+U12V,1,UMW,XL1509-ADJ,LCSC,C2681227,0.2219,0.2219,2026-09-09,,Low-cost 40 V input 2 A gate-drive buck; 13060 stocked; 5+ price,stock_verified_datasheet_validation_required
+U3V3,1,Torex,XC6206P332MR,LCSC,search-required,,,,,Specified 3.3 V LDO family; exact stocked suffix to be frozen before order,datasheet_validation_required
+RGA1-RGA18 RGB1-RGB18,36,Yageo,RC0603FR-074R7L,Mouser,603-RC0603FR-074R7L,,,,,Individual 4.7 ohm 1% gate resistors with globally stocked alternate,verified_family
+RPUA1-RPUA6 RPUB1-RPUB6,12,Yageo,RC0603FR-0710KL,Mouser,603-RC0603FR-0710KL,,,,,Gate-group pulldown and logic pull resistors,verified_family
+CBOOT_A1-CBOOT_A3 CBOOT_B1-CBOOT_B3,6,FH Guo,TCC0603X7R105K500CT,LCSC,search-required,,,,,1 uF bootstrap capacitor; exact approved part requires voltage-bias check,validation_required
+CBUSA1-CBUSA4 CBUSB1-CBUSB4,8,Panasonic,EEU-FS1V471,Mouser,667-EEU-FS1V471,,,,,Four 470 uF 35 V low-ESR capacitors per channel starting option,stock_and_fit_validation_required
+NTCA1 NTCA2 NTCB1 NTCB2,4,Murata,NCP21XH103J03RA,Mouser,81-NCP21XH103J03RA,,,,,10 kOhm NTC near each shunt and FET bank,verified_family
+RDTA RDTB,2,Yageo,RC0603FR-07100KL,Mouser,603-RC0603FR-07100KL,,,,,DRV8300 variable-deadtime programming starting value; tune from scope results,validation_required
+CGVDDA CGVDDB,2,Murata,GRM31CR71E106KA12L,Mouser,81-GRM31CR71E106KA2L,,,,,10 uF 25 V X7R local GVDD bypass required by TI,dc_bias_validation_required
+CGVDDHF_A CGVDDHF_B,2,Murata,GRM188R71E104KA01D,Mouser,81-GRM188R71E104KA1D,,,,,100 nF 25 V local high-frequency GVDD bypass,verified_family
+CMCUA1-CMCUA3 CMCUB1-CMCUB3,6,Murata,GRM188R71C104KA01D,Mouser,81-GRM188R71C104KA1D,,,,,100 nF logic decoupling at MCU and analog supply pins,verified_family
+CMCUA4 CMCUB4,2,Murata,GRM21BR71A106KE51L,Mouser,81-GRM21BR71A106KE1L,,,,,10 uF local 3.3 V bulk,verified_family
+RBEMFT_A1-RBEMFT_A12 RBEMFT_B1-RBEMFT_B12,24,Yageo,RC0603FR-0747KL,Mouser,603-RC0603FR-0747KL,,,,,Two series 47 kOhm upper resistors per protected BEMF divider,verified_family
+RBEMFB_A1-RBEMFB_A6 RBEMFB_B1-RBEMFB_B6,12,Yageo,RC0603FR-0712KL,Mouser,603-RC0603FR-0712KL,,,,,12 kOhm BEMF divider lower legs; 25.2 V gives 2.85 V nominal,verified_family
+RBEMFS_A1-RBEMFS_A6 RBEMFS_B1-RBEMFS_B6,12,Yageo,RC0603FR-071KL,Mouser,603-RC0603FR-071KL,,,,,1 kOhm ADC injection-current limiting resistors,verified_family
+CBEMF_A1-CBEMF_A6 CBEMF_B1-CBEMF_B6,12,Murata,GRM1885C1H102JA01D,Mouser,81-GRM1885C1H102JA1D,,,,,1 nF C0G BEMF filter capacitors; tune after ringing capture,verified_family
+DBEMF_A1-DBEMF_A3 DBEMF_B1-DBEMF_B3,6,Nexperia,BAT54S,Multiple,validation-required,,,,,Dual Schottky ADC clamps for BEMF channels,footprint_and_leakage_validation_required
+RVBUST_A1-RVBUST_A2 RVBUST_B1-RVBUST_B2,4,Yageo,RC0603FR-0747KL,Mouser,603-RC0603FR-0747KL,,,,,Series upper resistors for independent VBUS dividers,verified_family
+RVBUSB_A RVBUSB_B,2,Yageo,RC0603FR-0712KL,Mouser,603-RC0603FR-0712KL,,,,,Lower resistors for independent VBUS dividers,verified_family
+RCS_A1 RCS_A2 RCS_B1 RCS_B2,4,Yageo,RC0603FR-0710RL,Mouser,603-RC0603FR-0710RL,,,,,10 ohm INA190 input EMI filter resistors,verified_family
+CCS_A CCS_B,2,Murata,GRM1885C1H102JA01D,Mouser,81-GRM1885C1H102JA1D,,,,,1 nF differential shunt-input filter,verified_family
+CINA_A CINA_B,2,Murata,GRM188R71C104KA01D,Mouser,81-GRM188R71C104KA1D,,,,,INA190 supply decoupling,verified_family
+UOCA UOCB,2,Texas Instruments,TLV3201AIDBVR,Mouser,595-TLV3201AIDBVR,,,,,Fast comparator from current-amplifier output to TIM1 break,threshold_and_response_validation_required
+U12MONA U12MONB,2,Texas Instruments,TLV6700DDCR,Mouser,595-TLV6700DDCR,,,,,Independent local 12 V gate-supply window monitor; DRV8300 has no nFAULT pin,threshold_validation_required
+LBEC,1,Bourns,SRP1265A-470M,Mouser,652-SRP1265A-470M,,,,,47 uH shielded BEC inductor starting option,saturation_and_thermal_validation_required
+DBEC,1,Diodes Incorporated,MBR20100CT,Mouser,621-MBR20100CT,,,,,100 V 20 A dual Schottky BEC catch diode,thermal_validation_required
+CBECO1-CBECO4,4,Panasonic,EEH-ZA1A101P,Mouser,667-EEH-ZA1A101P,,,,,100 uF 10 V polymer BEC output bank,ripple_and_stock_validation_required
+CBECIN1-CBECIN2,2,Panasonic,EEH-ZA1V101P,Mouser,667-EEH-ZA1V101P,,,,,100 uF 35 V polymer local BEC input bank,ripple_and_stock_validation_required
+L12V,1,Bourns,SRN8040-680M,Mouser,652-SRN8040-680M,,,,,68 uH shared gate-supply buck inductor,saturation_validation_required
+D12V,1,Diodes Incorporated,SS36-13-F,Mouser,621-SS36-F,,,,,60 V 3 A Schottky for XL1509 supply,verified_family
+CBUSA_HF1-CBUSA_HF6 CBUSB_HF1-CBUSB_HF6,12,Murata,GRM32ER71H106KA12L,Mouser,81-GRM32ER71H106KA2L,,,,,10 uF 50 V MLCC local half-bridge decoupling,dc_bias_validation_required
+CSNUBA1-CSNUBA3 CSNUBB1-CSNUBB3,6,Murata,GRM31C5C2J102JA01L,Mouser,81-GRM31C5C2J102JA1L,,,,,1 nF 630 V C0G optional phase snubber capacitors,scope_tuning_required
+RSNUBA1-RSNUBA3 RSNUBB1-RSNUBB3,6,Panasonic,ERJ-P06J100V,Mouser,667-ERJ-P06J100V,,,,,10 ohm 0.5 W optional phase snubber resistors,scope_tuning_required
+JCTRL,1,Molex,53398-0871,Mouser,538-53398-0871,,,,,Top-entry 8-pin logic/SPI/SWD control connector,pinout_validation_required

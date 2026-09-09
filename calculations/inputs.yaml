@@ -1,0 +1,35 @@
+status: design_estimate_not_measured
+battery:
+  nominal_v: 22.2
+  charged_v: 25.2
+mosfet:
+  part: SFS06R025GF
+  count_total: 36
+  per_switch: 3
+  gate_charge_c: 8.1e-8
+  rds_on_25c_ohm: 0.002
+  hot_multiplier_assumption: 1.7
+gate_driver:
+  part: DRV8300DRGER
+  source_a: 0.75
+  sink_a: 1.5
+  gvdd_v: 12.0
+  individual_gate_resistor_ohm: 4.7
+pwm_frequencies_hz: [12000, 16000, 20000, 24000]
+current_points_a: [100, 120, 150]
+copper_shunt:
+  length_m: 0.0116
+  width_m: 0.028
+  thickness_m: 0.000070
+  layers: 1
+  resistivity_20c_ohm_m: 1.68e-8
+  temperature_coefficient_per_c: 0.0039
+bec:
+  part: XL4016E1
+  input_max_v: 25.2
+  output_v: 5.0
+  target_current_a: 8.0
+  switching_hz: 180000
+  inductor_h: 4.7e-5
+  assumed_diode_drop_v: 0.55
+

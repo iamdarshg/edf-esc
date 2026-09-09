@@ -1,0 +1,10 @@
+.worktrees/
+build/
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+*.elf
+*.hex
+*.bin
+*.map

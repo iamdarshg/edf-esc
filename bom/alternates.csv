@@ -1,0 +1,10 @@
+function,primary,alternate,reason,status
+power_mosfet,SFS06R025GF,none approved,Package and switching equivalence must be reviewed before substitution,locked
+gate_driver,DRV8300DRGER,Mouser 595-DRV8300DRGER,Exact MPN secondary distributor; D variant and QFN variable deadtime are required,price_and_stock_review_required
+current_amplifier,INA190A3IDDFR,Mouser 595-INA190A3IDDFR,Exact MPN secondary distributor and exact pinout,price_and_stock_review_required
+current_amplifier_cost_down,INA190A3IDDFR,INA186A3IDDFR,Same nominal gain and LCSC-listed pin-compatible alternative; common-mode transient and accuracy review required,electrical_review_required
+logic_mcu,PY32F030K28U6TR,none approved,Pin map is specific to QFN32 K2,locked
+bec_buck,XL4016E1,SMD 36 V 8 A buck,Only if through-hole assembly or thermal testing rejects XL4016,cost_review_required
+bulk_capacitor,EEU-FS1V471,Mouser 667-EEU-FS1V471,Exact Panasonic MPN secondary source,fit_stock_and_ripple_review_required
+gate_resistor,RC0603FR-074R7L,Mouser 603-RC0603FR-074R7L,Exact Yageo MPN secondary source,verified_family
+temperature_sensor,NCP21XH103J03RA,Mouser 81-NCP21XH103J03RA,Exact Murata MPN secondary source,verified_family

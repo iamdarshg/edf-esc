@@ -1,0 +1,24 @@
+function,pin,peripheral,af,mode,evidence
+PWM_U_H,PA8,TIM1_CH1,AF2,alternate push-pull,PY32F030 Rev1.3 tables 4-2 and 4-4
+PWM_U_L,PA7,TIM1_CH1N,AF2,alternate push-pull,PY32F030 Rev1.3 tables 4-2 and 4-4
+PWM_V_H,PA9,TIM1_CH2,AF2,alternate push-pull,PY32F030 Rev1.3 tables 4-2 and 4-4
+PWM_V_L,PB0,TIM1_CH2N,AF2,alternate push-pull,PY32F030 Rev1.3 tables 4-2 and 4-5
+PWM_W_H,PA10,TIM1_CH3,AF2,alternate push-pull,PY32F030 Rev1.3 tables 4-2 and 4-4
+PWM_W_L,PB1,TIM1_CH3N,AF2,alternate push-pull,PY32F030 Rev1.3 tables 4-2 and 4-5
+BEMF_U,PA2,ADC_IN2,analog,analog input,PY32F030 Rev1.3 table 4-2
+BEMF_V,PA3,ADC_IN3,analog,analog input,PY32F030 Rev1.3 table 4-2
+BEMF_W,PA4,ADC_IN4,analog,analog input,PY32F030 Rev1.3 table 4-2
+CURRENT,PA0,ADC_IN0,analog,analog input,PY32F030 Rev1.3 table 4-2
+VBUS,PA1,ADC_IN1,analog,analog input,PY32F030 Rev1.3 table 4-2
+NTC_POWER,PA5,ADC_IN5,analog,analog input,PY32F030 Rev1.3 table 4-2
+THROTTLE_PWM,PB4,TIM3_CH1,AF1,input capture,PY32F030 Rev1.3 tables 4-2 and 4-5
+SPI_SCLK,PF0,SPI2_SCK,AF0,alternate input,PY32F030 Rev1.3 tables 4-2 and 4-4
+SPI_MOSI,PB7,SPI2_MOSI,AF1,alternate input,PY32F030 Rev1.3 tables 4-2 and 4-5
+SPI_MISO,PF1,SPI2_MISO,AF0,alternate push-pull tristated,PY32F030 Rev1.3 tables 4-2 and 4-4
+SPI_CS,PB8,GPIO,,input pull-up,PY32F030 Rev1.3 table 4-2 QFN32 K2
+BREAK,PA6,TIM1_BKIN,AF2,alternate input,PY32F030 Rev1.3 tables 4-2 and 4-4
+GATE_SUPPLY_FAULT,PB5,GPIO,,input pull-up,External 12 V supervisor because DRV8300 has no nFAULT pin
+SWDIO,PA13,SWDIO,AF0,debug,PY32F030 Rev1.3 tables 4-2 and 4-4
+SWCLK,PA14,SWCLK,AF0,debug,PY32F030 Rev1.3 tables 4-2 and 4-4
+NRST,PF2,NRST,,reset,PY32F030 Rev1.3 table 4-2
+

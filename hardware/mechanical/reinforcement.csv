@@ -1,0 +1,3 @@
+profile,quantity,length_mm,width_mm,thickness_mm,material,status,notes
+BAT_RAIL,4,32.0,4.0,1.0,C110 copper,preliminary,Two local battery rails per channel; final holes/cutouts follow routed Rev A copper
+PHASE_RAIL,6,30.0,4.0,1.0,C110 copper,preliminary,One local phase rail per output; final holes/cutouts follow routed Rev A copper

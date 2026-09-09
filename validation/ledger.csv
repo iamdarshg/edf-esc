@@ -1,0 +1,12 @@
+stage,channel,date,operator,hardware_commit,firmware_commit,supply_limit,load,ambient_c,max_temp_c,scope_artifacts,result,notes
+unpowered,A,,,,,,,,,,pending,
+unpowered,B,,,,,,,,,,pending,
+gate_only,A,,,,,,,,,,pending,
+gate_only,B,,,,,,,,,,pending,
+low_voltage,A,,,,,,,,,,pending,
+low_voltage,B,,,,,,,,,,pending,
+3s_motor,A,,,,,,,,,,pending,
+3s_motor,B,,,,,,,,,,pending,
+restricted_6s,A,,,,,,,,,,pending,
+restricted_6s,B,,,,,,,,,,pending,
+bec_2_4_6_8a,shared,,,,,,,,,,pending,

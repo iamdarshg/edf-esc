@@ -1,0 +1,29 @@
+name: engineering-checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  host-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -e '.[test]'
+      - run: make test
+      - run: python -m pytest -q
+      - run: git diff --check
+
+  kicad-parser-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y kicad
+      - run: python3 -m edf_esc.cad
+      - run: git diff --exit-code -- hardware/edf-esc.kicad_pcb hardware/edf-esc.kicad_sch
+      - run: mkdir -p build/gerbers
+      - run: kicad-cli pcb export gerbers -o build/gerbers/ hardware/edf-esc.kicad_pcb
+      - run: kicad-cli sch export pdf -o build/edf-esc-schematic.pdf hardware/edf-esc.kicad_sch
